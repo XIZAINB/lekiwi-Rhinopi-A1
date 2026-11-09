@@ -31,11 +31,12 @@
 > `upstream/lerobot-main/` 是 lerobot 固定 commit 的**源码快照**，仅为阅读/对照方便（例如看
 > `examples/lekiwi/` 的原始实现）。**运行时不使用它**：两端都由 bootstrap 脚本各自 clone 到
 > `$HOME/lerobot`（板端）/ 本地目录（电脑端），路径由 `config/env` 的 `LEROBOT_DIR` 指定。
+> 快照约 87 MB，其中媒体文件走 Git LFS；只想跑脚本、不想下快照可以 `GIT_LFS_SKIP_SMUDGE=1 git clone ...`。
 
 > 本仓库不是 fork。`scripts/teleoperate.py` 与 `scripts/teleoperate_keyboard_only.py`
 > 是 lerobot `examples/lekiwi/` 的衍生文件（Apache-2.0，文件头保留原声明并标注改动）。
 > 上游 `examples/lekiwi/teleoperate.py` 的 `remote_ip` / `port` 写死在 `main()` 里、没有 CLI 参数，
-> 所以只能复制一份改，这是本仓库唯一复制上游代码的地方。
+> 所以只能复制一份改，这是本仓库唯一**改过**上游代码的地方（`upstream/` 里的快照是原样拷贝、一行未改）。
 
 ---
 
