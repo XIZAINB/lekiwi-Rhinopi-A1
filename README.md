@@ -28,6 +28,10 @@
 - ❌ 不包含舵机厂商的调试软件/PDF，请到厂商官网下载。
 - ❌ 不修改 lerobot 源码。`lerobot` 按固定 commit 原样 checkout，本仓库只做配置与编排。
 
+> `upstream/lerobot-main/` 是 lerobot 固定 commit 的**源码快照**，仅为阅读/对照方便（例如看
+> `examples/lekiwi/` 的原始实现）。**运行时不使用它**：两端都由 bootstrap 脚本各自 clone 到
+> `$HOME/lerobot`（板端）/ 本地目录（电脑端），路径由 `config/env` 的 `LEROBOT_DIR` 指定。
+
 > 本仓库不是 fork。`scripts/teleoperate.py` 与 `scripts/teleoperate_keyboard_only.py`
 > 是 lerobot `examples/lekiwi/` 的衍生文件（Apache-2.0，文件头保留原声明并标注改动）。
 > 上游 `examples/lekiwi/teleoperate.py` 的 `remote_ip` / `port` 写死在 `main()` 里、没有 CLI 参数，
@@ -170,6 +174,85 @@ powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1
 | 键盘遥控 | `powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1 -Keyboard -Rerun` |
 | leader 遥控 | `powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1` |
 | 重新对齐 | `powershell -ExecutionPolicy Bypass -File scripts\zero_align.ps1` |
+| 重启 host（先停再起） | `ssh aidlux@<IP> "cd ~/lekiwi-rhinopi-a1 && sh scripts/a1_host.sh stop && sh scripts/a1_host.sh start"` |
+
+---
+
+## 4.2 关掉之后怎么再启动
+
+`a1_bootstrap.sh` / `win_bootstrap.ps1`（环境）与 `a1_calibrate.sh` / `win_calibrate.ps1` + `zero_align.ps1`（校准）
+**都只做一次**。之后每次关掉再想用，只做下面的事，顺序不能反：**先板卡 host，后电脑遥操作**。
+
+### 情形 A · 只关了电脑端（`Ctrl+C` 或关掉 PowerShell 窗口）
+
+host 还在板卡上跑，重新连一次就行：
+
+```powershell
+cd \lekiwi-rhinopi-a1
+powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1               # leader 臂 + 键盘底盘
+powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1 -Keyboard     # 只有键盘
+```
+
+### 情形 B · host 也停了（跑过 stop / 板卡重启过 / host 存活时间到了）
+
+先启动板端 host，`start` 会等到 5555 端口监听才返回 `[ok] host 就绪`：
+
+```powershell
+ssh aidlux@192.168.112.249 "cd ~/lekiwi-rhinopi-a1 && sh scripts/a1_host.sh start"
+```
+
+再跑情形 A 的命令。也可以登进板卡里操作：
+
+```bash
+ssh aidlux@192.168.112.249
+cd ~/lekiwi-rhinopi-a1
+sh scripts/a1_host.sh status    # 先确认是不是已经在跑
+sh scripts/a1_host.sh start
+```
+
+> - 已有 host 在跑时 `start` 会报「host 已在运行」并以非 0 退出 —— 不是故障，`status` 能看到进程就别重复起。
+> - 想真正重启就 `stop` 再 `start`（脚本没有单独的 `restart` 子命令）。
+> - `CONNECTION_TIME_S=3600` 是 host 的**总存活时间**，从 `start` 起算满 1 小时会自己退出（上游默认只有 30 s），
+>   属于正常现象，按情形 B 重启即可。
+
+### 情形 C · 板卡断电 / 换网后连不上（DHCP 换了 IP）
+
+板卡 IP 由 DHCP 分配、可能变化（当前实测为 `192.168.112.249`）。连接失败时先查 IP，再改电脑端配置：
+
+```bash
+ssh aidlux@192.168.112.249 "hostname -I"     # 1) 查板卡当前 IP
+```
+
+```powershell
+# 2) 把新 IP 写进电脑端 config\env 的 BOARD_IP，然后验证端口
+Test-NetConnection 192.168.112.249 -Port 5555
+```
+
+通了再按情形 A / B 启动。`teleop.ps1` 连不上时会直接提示「IP 是否变了」，并打印板端启动命令。
+
+### 关掉再开，哪些要重做？
+
+| 操作 | 关掉再开要不要重做 |
+| --- | --- |
+| 底盘电池上电 | **要** —— USB 不给舵机供电，没上电 host 会报 `Missing motor IDs: 1~9` |
+| `a1_host.sh start` | **要** —— host 不是 systemd 服务，不随开机自启 |
+| `a1_bootstrap.sh` / `win_bootstrap.ps1` | 不用 —— 只在换板卡 / 换电脑 / 升级 lerobot 时跑 |
+| follower / leader 校准 | 不用 —— 校准文件存在磁盘上；拆装舵机、改舵机 ID 才需重校 |
+| `zero_align.ps1` | 不用 —— 只有重新校准过、拆过舵机、或出现固定偏差时才跑 |
+| 确认 `LEADER_PORT` | 换了 USB 口才要：`win_bootstrap.ps1 -DetectOnly` |
+
+校准文件位置（重启、断电都不会丢）：
+
+- 板端 follower：`~/.cache/huggingface/lerobot/calibration/robots/lekiwi/<ROBOT_ID>.json`
+- 电脑端 leader：`%USERPROFILE%\.cache\huggingface\lerobot\calibration\teleoperators\so_leader\<LEADER_ID>.json`
+
+### 建议的关闭顺序
+
+1. 电脑端 `Ctrl+C` 退出遥操作（底盘由 host 看门狗 0.5 s 内自动停）
+2. （可选）板端 `sh scripts/a1_host.sh stop`
+3. 断底盘电池
+
+> `stop` 是强杀、**不释放扭矩**。收工前想把手臂掰回原位，先 `stop` 再 `sh scripts/a1_host.sh release-torque`。
 
 ---
 
@@ -271,8 +354,10 @@ powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1
 │   ├── align_leader_to_follower.py   # 零点对齐算法（支持 --dry-run）
 │   ├── measure_offset_once.py        # 只读测差（= align --dry-run）
 │   └── release_torque.py             # 板端：释放扭矩
-└── docs/
-    └── troubleshooting.md     # 实测踩坑表（板端 / 连接 / 校准 / 维护）
+├── docs/
+│   └── troubleshooting.md     # 实测踩坑表（板端 / 连接 / 校准 / 维护）
+└── upstream/
+    └── lerobot-main/          # lerobot 固定 commit 源码快照（只读参考，不参与运行）
 ```
 
 ---
