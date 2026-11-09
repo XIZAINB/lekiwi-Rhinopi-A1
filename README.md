@@ -1,6 +1,6 @@
 # lekiwi-Rhinopi-A1
 
-> 在**犀牛派 A1（AidLux / ARM64）**上运行 [LeKiwi](https://github.com/huggingface/lerobot) 主机端的完整部署方案：板卡环境、串口/相机识别、校准、零点对齐与排障。
+> 在 **犀牛派 A1（AidLux / ARM64）** 上运行 [LeKiwi](https://github.com/huggingface/lerobot) 主机端的完整部署方案：板卡环境、串口/相机识别、校准、零点对齐与排障。
 >
 > One-command setup for running the LeKiwi robot host on a Rhino Pi A1 (AidLux, ARM64), including calibration and leader-arm zero-alignment helpers.
 
