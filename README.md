@@ -1,8 +1,11 @@
-# lekiwi-rhinopi-a1
+# lekiwi-Rhinopi-A1
 
 > 在**犀牛派 A1（AidLux / ARM64）**上运行 [LeKiwi](https://github.com/huggingface/lerobot) 主机端的完整部署方案：板卡环境、串口/相机识别、校准、零点对齐与排障。
 >
 > One-command setup for running the LeKiwi robot host on a Rhino Pi A1 (AidLux, ARM64), including calibration and leader-arm zero-alignment helpers.
+
+> 仓库网址：<https://github.com/XIZAINB/lekiwi-Rhinopi-A1>。
+> 本地/板端**目录名仍写作 `lekiwi-rhinopi-a1`**（下文所有命令都显式指定该目录），与仓库名大小写不同、不影响使用。
 
 ---
 
@@ -69,7 +72,7 @@
 ```bash
 ssh <BOARD_USER>@<BOARD_IP>
 
-git clone https://github.com/XIZAINB/lekiwi-rhinopi-a1.git ~/lekiwi-rhinopi-a1
+git clone https://github.com/XIZAINB/lekiwi-Rhinopi-A1.git ~/lekiwi-rhinopi-a1
 cd ~/lekiwi-rhinopi-a1
 
 # 一次性环境准备（可重复执行）：apt 依赖 → uv → clone lerobot@<commit> → uv sync → 瘦身 → 自检
@@ -113,7 +116,7 @@ sh scripts/a1_host.sh stop      # 停止（扭矩会保持，见下）
 ### 第 2 步 · 电脑端（T2）
 
 ```powershell
-git clone https://github.com/XIZAINB/lekiwi-rhinopi-a1.git C:\lekiwi-rhinopi-a1
+git clone https://github.com/XIZAINB/lekiwi-Rhinopi-A1.git C:\lekiwi-rhinopi-a1
 cd C:\lekiwi-rhinopi-a1
 
 # 一次性环境准备（可重复执行）：uv → clone lerobot → uv sync → 探测 COM 口 → 自检
