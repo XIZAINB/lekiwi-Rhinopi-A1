@@ -11,6 +11,10 @@
 
 ## 1. 这是什么
 
+<img src="media/lekiwi-demo.gif" alt="LeKiwi 遥操作实测演示" width="520">
+
+> 实测演示：电脑端遥控底盘与跟随臂，板端 host 驱动舵机总线（gif 已压缩，画面有损）。
+
 一块新板卡 + 一台新电脑，`git clone` 之后：
 
 | 关卡 | 做什么 | 命令 | 实测 |
@@ -360,6 +364,8 @@ Test-NetConnection 192.168.112.249 -Port 5555
 │   └── release_torque.py             # 板端：释放扭矩
 ├── docs/
 │   └── troubleshooting.md     # 实测踩坑表（板端 / 连接 / 校准 / 维护）
+├── media/
+│   └── lekiwi-demo.gif        # README 顶部的实测演示动图
 └── upstream/
     └── lerobot-main/          # lerobot 固定 commit 源码快照（只读参考，不参与运行）
 ```
