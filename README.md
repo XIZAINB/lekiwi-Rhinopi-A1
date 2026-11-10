@@ -11,7 +11,7 @@
 
 ## 1. 这是什么
 
-<img src="media/lekiwi-demo.gif" alt="LeKiwi 遥操作实测演示" width="520">
+![LeKiwi 遥操作实测演示](media/lekiwi-demo.gif)
 
 > 实测演示：电脑端遥控底盘与跟随臂，板端 host 驱动舵机总线（gif 已压缩，画面有损）。
 
