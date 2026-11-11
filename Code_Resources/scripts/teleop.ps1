@@ -29,7 +29,7 @@ if ([string]::IsNullOrWhiteSpace($boardIp)) {
 if (-not (Test-LeKiwiPort -TargetHost $boardIp -Port $cmdPort)) {
     Write-Bad "连不上 $boardIp`:$cmdPort"
     Write-Note '检查：板端 sh scripts/a1_host.sh status / IP 是否变了 / 是否同一网段'
-    Write-Note "板端启动： ssh <user>@$boardIp 'cd ~/lekiwi-rhinopi-a1 && sh scripts/a1_host.sh start'"
+    Write-Note "板端启动： ssh <user>@$boardIp 'cd ~/LeKiwi_A1/Code_Resources && sh scripts/a1_host.sh start'"
     exit 1
 }
 Write-Ok "板卡 $boardIp`:$cmdPort 可达"

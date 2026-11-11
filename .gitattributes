@@ -8,12 +8,16 @@
 *.example text eol=lf
 *.gitignore text eol=lf
 
-# PowerShell 脚本保持 CRLF（且必须 UTF-8 with BOM，见 docs/troubleshooting.md）
+# PowerShell 脚本保持 CRLF（且必须 UTF-8 with BOM，见 Code_Resources/docs/troubleshooting.md）
 *.ps1  text eol=crlf
 *.cmd  text eol=crlf
 *.bat  text eol=crlf
 
 # 二进制资源：禁止换行符转换
+*.mp4  binary
 *.gif  binary
 *.png  binary
 *.jpg  binary
+*.psd  binary
+*.stl  binary
+*.zip  binary

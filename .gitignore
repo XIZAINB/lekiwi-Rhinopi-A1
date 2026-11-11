@@ -1,5 +1,5 @@
 # 本地配置（含 IP / 串口等机器相关信息）
-config/env
+Code_Resources/config/env
 
 # Python
 __pycache__/
