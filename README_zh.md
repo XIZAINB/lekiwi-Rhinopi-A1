@@ -4,6 +4,8 @@
 
 ![cover](cover1.jpg)
 
+![演示动图：键盘遥控与拖臂遥操作](lekiwi-demo.gif)
+
 ---
 
 ## 目录
@@ -68,6 +70,7 @@ LeKiwi_A1/
 ├── BOM.md                             # 物料清单（含购买链接）
 ├── URDF_JOINT_NAMES.md                # LeRobot 与 URDF 关节命名对照
 ├── cover1.jpg / cover2.jpg            # 项目封面图
+├── lekiwi-demo.gif                    # 演示动图（README 顶部）
 ├── Demonstration.mp4                  # 成品演示视频
 │
 ├── 3D_Printing_Models/                # 3D 打印 STL 文件

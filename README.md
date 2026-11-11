@@ -4,6 +4,8 @@
 
 ![cover](cover1.jpg)
 
+![Demo GIF: keyboard teleoperation and leader-arm dragging](lekiwi-demo.gif)
+
 ---
 
 ## Table of Contents
@@ -66,6 +68,7 @@ LeKiwi_A1/
 ├── BOM.md                             # Bill of materials with purchase links
 ├── URDF_JOINT_NAMES.md                # Joint-name mapping between LeRobot and the URDF
 ├── cover1.jpg / cover2.jpg            # Project cover images
+├── lekiwi-demo.gif                    # Demo GIF (shown at the top)
 ├── Demonstration.mp4                  # Demo video of the finished robot
 │
 ├── 3D_Printing_Models/                # STL files for 3D printing
